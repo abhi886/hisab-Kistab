@@ -1,0 +1,17 @@
+{
+   
+    "extends": ["airbnb", "prettier","plugin:node/recommended"],
+    "plugins": ["prettier"],
+    "rules": {
+        "prettier/prettier":"error",
+        "no-unused-vars":"warn",
+        "no-console":"off",
+        "func-names":"off",
+        "no-process-exit":"off",
+        "class-method-use-this":"off",
+        "linebreak-style": 0,
+        "global-require": 0,
+        "eslint linebreak-style": [0, "error", "windows"]
+    }
+
+}
