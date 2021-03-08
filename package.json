@@ -4,7 +4,7 @@
   "description": "algo-app",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --require @babel/register tests/src/*js",
     "start": "nodemon src/index.js",
     "babel": "./node_modules/.bin/babel",
     "transpile": "babel src --out-dir dist-server"
@@ -28,6 +28,7 @@
     "@babel/cli": "^7.13.0",
     "@babel/core": "^7.13.8",
     "@babel/preset-env": "^7.13.9",
+    "@babel/register": "^7.13.8",
     "chai": "^4.3.3",
     "chai-http": "^4.3.0",
     "eslint": "^7.21.0",

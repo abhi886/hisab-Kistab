@@ -8,4 +8,5 @@ app.get('/', (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(3000, () => console.log(`Listening to port ${port}`));
+const server = app.listen(3000, () => console.log(`Listening to port ${port}`));
+module.exports = server;
