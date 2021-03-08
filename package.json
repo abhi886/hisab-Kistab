@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/index.js",
-    "babel": "./node_modules/.bin/babel"
+    "babel": "./node_modules/.bin/babel",
+    "transpile": "babel src --out-dir dist-server"
   },
   "repository": {
     "type": "git",
