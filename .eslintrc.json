@@ -1,5 +1,9 @@
 {
-   
+   "env":{"commonjs": true,
+    "es6": true,
+    "node": true,
+    "mocha":true
+},
     "extends": ["airbnb", "prettier","plugin:node/recommended","plugin:prettier/recommended"],
     "plugins": ["prettier"],
     "rules": {
@@ -11,6 +15,8 @@
         "class-method-use-this":"off",
         "linebreak-style": 0,
         "global-require": 0,
+        "node/no-unpublished-require": 0,
+        "node/no-missing-require": 0,
         "eslint linebreak-style": [0, "error", "windows"]
     }
 
