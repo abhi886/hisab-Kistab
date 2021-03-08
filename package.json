@@ -9,6 +9,7 @@
     "lint:src": "eslint src/**/*.js --fix",
     "lint:tests": "eslint tests/**/*.js --fix",
     "babel": "./node_modules/.bin/babel",
+    "clean": "rimraf dist-server",
     "transpile": "babel src --out-dir dist-server"
   },
   "repository": {
