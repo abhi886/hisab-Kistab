@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  app:
+    container_name: algo-app
+    # restart: always
+    build: .
+    ports:
+      - '4000:4000'
+    links:
+      - mongo
+    volumes:
+      - ./:/usr/src/backend-api
+    networks:
+      - algo-app_default
+  mongo:
+    container_name: algo-app-mongodb
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - algo-app-data:/data/db
+    networks:
+      - algo-app_default
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - algo-app_default
+
+volumes:
+  algo-app-data:
+
+networks:
+  algo-app_default:
+    external:
+      name: algo-app_default
