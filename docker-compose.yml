@@ -14,7 +14,7 @@ services:
     networks:
       - algo-app_default
   mongo:
-    container_name: easyrooms-mongodb
+    container_name: algo-app-mongodb
     image: mongo:latest
     ports:
       - '27017:27017'
@@ -35,6 +35,6 @@ volumes:
   algo-app-data:
 
 networks:
-  algo-api_default:
+  algo-app_default:
     external:
       name: algo-app_default
