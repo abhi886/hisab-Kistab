@@ -1,5 +1,5 @@
 FROM node:14.14.0-alpine
-WORKDIR /usr/src/algo-app
+WORKDIR /usr/src/backend-api
 COPY package.json ./
 RUN npm install
 COPY . .
@@ -9,4 +9,4 @@ RUN npm run lint:src
 RUN npm run test
 # RUN npm run build:prod
 
-CMD ["npm", "run","dev"]
+CMD ["npm", "start"]
