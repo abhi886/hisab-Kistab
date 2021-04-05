@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
+const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const express = require('express');
@@ -13,6 +14,8 @@ router.post('/', async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
   if (user) return res.status(400).send('User exists Damit');
   user = new User(_.pick(req.body, ['name', 'email', 'password', 'isAdmin']));
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(user.password, salt);
   await user.save();
   res.send(_.pick(user, ['name', 'email']));
 });
