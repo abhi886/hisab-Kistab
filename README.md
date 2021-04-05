@@ -1,5 +1,5 @@
 
-# easyrooms-backend-api
+# algo-backend-api
 
 This is a backend-api project for algo-app.
 
