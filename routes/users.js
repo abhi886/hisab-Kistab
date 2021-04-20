@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
+const config = require('config');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const mongoose = require('mongoose');
@@ -17,6 +19,7 @@ router.post('/', async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
-  res.send(_.pick(user, ['name', 'email']));
+  const token = user.generateAuthToken();
+  res.header('x-auth-token',token).send(_.pick(user, ['name', 'email']));
 });
 module.exports = router;
