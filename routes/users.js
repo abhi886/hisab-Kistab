@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
+const auth = require('../middleware/auth');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -9,6 +10,11 @@ const express = require('express');
 const { User, validate } = require('../models/user');
 
 const router = express.Router();
+
+router.get('/me', auth, async(req, res) => {
+  const user = await User.findById(req.user._id);
+  res.send(user);
+});
 
 router.post('/', async (req, res) => {
   const { error } = validate(req.body);
