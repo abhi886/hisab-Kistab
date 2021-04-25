@@ -29,7 +29,7 @@ res.send(member);
 // Add members/users to a group.
 router.post('/addMembers', async (req, res) => {
 const group = await Group.findById(req.body.groupId);
-if (!group) return res.status(404).message('Group not found');
+if (!group) return res.status(404).send('Group not found');
 // group = group.user.push(req.body.memberId);
 group.set({
   group: group.user.push(req.body.memberId)
@@ -37,4 +37,23 @@ group.set({
 const result = await group.save();
 res.send(group);
 });
+
+// Delete members from a group
+
+router.post('/deleteMembers', async (req, res) => {
+  const group = await Group.findById(req.body.groupId);
+  if (!group) return res.status(404).send('Group not found');
+  const rUser = _.remove(group.user, function(e) {
+    return e == req.body.memberId;
+  });
+  const mUser = group.user;
+  group.user = [];
+  group.user = mUser;
+  const result = await group.save();
+  res.send(group);
+  });
+
+
+
+
 module.exports = router;
