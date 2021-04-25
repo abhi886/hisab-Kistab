@@ -53,7 +53,11 @@ router.post('/deleteMembers', async (req, res) => {
   res.send(group);
   });
 
-
-
+// Delete a group 
+router.post('/deleteGroup', async (req, res) => {
+ const result = await Group.deleteOne({ _id: req.body.groupId});
+//  console.log(result);
+res.send(result);
+  });
 
 module.exports = router;
