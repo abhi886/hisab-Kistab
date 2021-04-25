@@ -28,4 +28,10 @@ router.post('/', async (req, res) => {
   const token = user.generateAuthToken();
   res.header('x-auth-token',token).send(_.pick(user, ['name', 'email']));
 });
+
+router.get('/getUsersId', async (req, res) => {
+let allUserInfo = await User.find();
+const allUserId = allUserInfo.map(userId => userId._id);
+res.send(allUserId.join());
+});
 module.exports = router;
