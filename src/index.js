@@ -27,7 +27,7 @@ app.use('/api/auth', auth);
 app.use('/api/groups', groups);
 
 app.get('/', (req, res) => {
-  res.send('hellooo world');
+  res.send('hello world');
 });
 
 const port = process.env.PORT || 3000;
