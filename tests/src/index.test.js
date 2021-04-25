@@ -14,7 +14,7 @@ describe('Index Test', () => {
       .get('/')
       .end((err, res) => {
         res.should.have.status(200);
-        // res.text.should.equal('hello world');
+        res.text.should.equal('hello world');
         done();
       });
   });

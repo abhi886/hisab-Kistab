@@ -30,10 +30,11 @@ res.send(member);
 router.post('/addMembers', async (req, res) => {
 const group = await Group.findById(req.body.groupId);
 if (!group) return res.status(404).send('Group not found');
-// group = group.user.push(req.body.memberId);
-group.set({
-  group: group.user.push(req.body.memberId)
-});
+if(group.user.includes(req.body.memberId)) {
+  return res.send('Member already exists');
+  process.exit(1);
+}
+group.user.push(req.body.memberId)
 const result = await group.save();
 res.send(group);
 });
