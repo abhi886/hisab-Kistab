@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const config = require('config');
 const users = require('../routes/users');
 const auth = require('../routes/auth.js');
+const groups = require('../routes/groups.js');
+
 
 const app = express();
 if (!config.get('jwtPrivateKey')) {
@@ -22,6 +24,7 @@ mongoose
 app.use(express.json());
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+app.use('/api/groups', groups);
 
 app.get('/', (req, res) => {
   res.send('hellooo world');
