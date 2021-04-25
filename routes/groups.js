@@ -25,4 +25,16 @@ const member = await Group
 .populate('user');
 res.send(member);
 });
+
+// Add members/users to a group.
+router.post('/addMembers', async (req, res) => {
+const group = await Group.findById(req.body.groupId);
+if (!group) return res.status(404).message('Group not found');
+// group = group.user.push(req.body.memberId);
+group.set({
+  group: group.user.push(req.body.memberId)
+});
+const result = await group.save();
+res.send(group);
+});
 module.exports = router;
