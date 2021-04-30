@@ -26,18 +26,55 @@ const member = await Group
 res.send(member);
 });
 
-// Add members/users to a group.
+// Add single member/user to a group.
+// router.post('/addMembers', async (req, res) => {
+// const group = await Group.findById(req.body.groupId);
+// if (!group) return res.status(404).send('Group not found');
+
+
+// if(group.user.includes(req.body.memberId)) {
+//   return res.send('Member already exists');
+//   process.exit(1);
+// }
+// group.user.push(req.body.memberId)
+// const result = await group.save();
+// res.send(group);
+// });
+
+// Add multiple members/users to a group
+// Test Cases : 1. Add a single member
+// Test Cases 2 : Add multiple members
+// Test Case 3 : Return message if member exist
+
 router.post('/addMembers', async (req, res) => {
-const group = await Group.findById(req.body.groupId);
-if (!group) return res.status(404).send('Group not found');
-if(group.user.includes(req.body.memberId)) {
-  return res.send('Member already exists');
-  process.exit(1);
-}
-group.user.push(req.body.memberId)
-const result = await group.save();
-res.send(group);
+  const memberId = req.body.memberId;
+  const group = await Group.findById(req.body.groupId);
+  let userExist = [];
+  const totalLength = memberId.concat(group.user);
+  if (!group) return res.status(404).send('Group not found');
+  if (memberId.length == 0) return res.send('Select atleast one group members');
+  
+    memberId.forEach(function(memberId) {
+      if(group.user.includes(memberId)) {
+        userExist.push(memberId);
+      }
+      else {
+        group.user = group.user.concat(memberId);
+      }
 });
+
+if(group.user.length == totalLength.length){
+  const result = await group.save();
+  res.send(result);
+}
+else {
+  res.send(userExist);
+}
+
+
+
+  });
+  
 
 // Delete members from a group
 
