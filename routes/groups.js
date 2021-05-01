@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const { Group, validate } = require('../models/group');
 const { User } = require('../models/user');
+const { isArray } = require('lodash');
 
 const router = express.Router();
 router.post('/', async (req, res) => {
@@ -26,21 +27,6 @@ const member = await Group
 res.send(member);
 });
 
-// Add single member/user to a group.
-// router.post('/addMembers', async (req, res) => {
-// const group = await Group.findById(req.body.groupId);
-// if (!group) return res.status(404).send('Group not found');
-
-
-// if(group.user.includes(req.body.memberId)) {
-//   return res.send('Member already exists');
-//   process.exit(1);
-// }
-// group.user.push(req.body.memberId)
-// const result = await group.save();
-// res.send(group);
-// });
-
 // Add multiple members/users to a group
 // Test Cases : 1. Add a single member
 // Test Cases 2 : Add multiple members
@@ -48,8 +34,8 @@ res.send(member);
 
 router.post('/addMembers', async (req, res) => {
   const memberId = req.body.memberId;
-  const group = await Group.findById(req.body.groupId);
   let userExist = [];
+  const group = await Group.findById(req.body.groupId);
   const totalLength = memberId.concat(group.user);
   if (!group) return res.status(404).send('Group not found');
   if (memberId.length == 0) return res.send('Select atleast one group members');
@@ -70,26 +56,53 @@ if(group.user.length == totalLength.length){
 else {
   res.send(userExist);
 }
-
-
-
   });
   
 
 // Delete members from a group
 
+// router.post('/deleteMembers', async (req, res) => {
+//   const group = await Group.findById(req.body.groupId);
+//   if (!group) return res.status(404).send('Group not found');
+//   const rUser = _.remove(group.user, function(e) {
+//     return e == req.body.memberId;
+//   });
+//   const mUser = group.user;
+//   group.user = [];
+//   group.user = mUser;
+//   const result = await group.save();
+//   res.send(group);
+//   });
+
+// Delete multiple members from a group
+// Test Cases
+//1. Delete a single user.
+//2. Delete multiple users.
+
 router.post('/deleteMembers', async (req, res) => {
   const group = await Group.findById(req.body.groupId);
   if (!group) return res.status(404).send('Group not found');
-  const rUser = _.remove(group.user, function(e) {
-    return e == req.body.memberId;
-  });
-  const mUser = group.user;
-  group.user = [];
-  group.user = mUser;
+  const memberId = req.body.memberId;
+  users = group.user;
+  if(memberId.length == 0) res.send('No members Selected');
+  let notMemberArray = [];
+  memberId.forEach(function(memberId) {
+    if(group.user.includes(memberId)) {
+      users.remove(memberId);
+    }
+    else {
+      notMemberArray.push(memberId);
+    }
+});
+if (notMemberArray.length == 0){
   const result = await group.save();
-  res.send(group);
+  res.send(users);
+}
+else {
+  res.send(notMemberArray);
+}
   });
+
 
 // Delete a group 
 router.post('/deleteGroup', async (req, res) => {
