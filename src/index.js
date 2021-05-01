@@ -5,6 +5,7 @@ const config = require('config');
 const users = require('../routes/users');
 const auth = require('../routes/auth.js');
 const groups = require('../routes/groups.js');
+const tests = require('../routes/tests.js');
 
 
 const app = express();
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/groups', groups);
+app.use('/api/tests', tests);
 
 app.get('/', (req, res) => {
   res.send('hello world');
