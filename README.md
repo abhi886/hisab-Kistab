@@ -1,7 +1,7 @@
 
-# algo-backend-api
+# hisab-kitab backend api
 
-This is a backend-api project for algo-app.
+hisab-Kitab is a backend api to caluculate
 
 ## How to run
 
