@@ -5,7 +5,7 @@ hisab-Kitab is a backend api to caluculate
 
 ## How to run
 
-1. Clone the repo - `git clone git@github.com:abhi886/algo-app.git`
+1. Clone the repo - `git clone git@github.com:abhi886/hisab-Kitab.git`
 2. Change the working directory - `cd algo-app`
 3. To install all dev and production packages - `npm install`
 4. To run the development server - `npm run dev`
