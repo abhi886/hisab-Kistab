@@ -39,11 +39,11 @@ router.post('/addMembers', async (req, res) => {
   if (memberId.length === 0)
     return res.send('Select atleast one group members');
 
-  memberId.forEach(function (memberId) {
-    if (group.user.includes(memberId)) {
-      userExist.push(memberId);
+  memberId.forEach(function (user) {
+    if (group.user.includes(user)) {
+      userExist.push(user);
     } else {
-      group.user = group.user.concat(memberId);
+      group.user = group.user.concat(user);
     }
   });
 
@@ -82,12 +82,11 @@ router.post('/deleteMembers', async (req, res) => {
   const users = group.user;
   if (memberId.length === 0) res.send('No members Selected');
   const notMemberArray = [];
-  // eslint-disable-next-line no-shadow
-  memberId.forEach((memberId) => {
-    if (group.user.includes(memberId)) {
-      users.remove(memberId);
+  memberId.forEach((user) => {
+    if (group.user.includes(user)) {
+      users.remove(user);
     } else {
-      notMemberArray.push(memberId);
+      notMemberArray.push(user);
     }
   });
   if (notMemberArray.length === 0) {
