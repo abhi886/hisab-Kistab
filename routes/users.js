@@ -1,17 +1,18 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
-const auth = require('../middleware/auth');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const express = require('express');
+const auth = require('../middleware/auth');
 const { User, validate } = require('../models/user');
 
 const router = express.Router();
 
-router.get('/me', auth, async(req, res) => {
+router.get('/me', auth, async (req, res) => {
+  // eslint-disable-next-line no-underscore-dangle
   const user = await User.findById(req.user._id);
   res.send(user);
 });
@@ -26,12 +27,13 @@ router.post('/', async (req, res) => {
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
   const token = user.generateAuthToken();
-  res.header('x-auth-token',token).send(_.pick(user, ['name', 'email']));
+  res.header('x-auth-token', token).send(_.pick(user, ['name', 'email']));
 });
 
 router.get('/getUsersId', async (req, res) => {
-let allUserInfo = await User.find();
-const allUserId = allUserInfo.map(userId => userId._id);
-res.send(allUserId.join());
+  const allUserInfo = await User.find();
+  // eslint-disable-next-line no-underscore-dangle
+  const allUserId = allUserInfo.map((userId) => userId._id);
+  res.send(allUserId.join());
 });
 module.exports = router;
