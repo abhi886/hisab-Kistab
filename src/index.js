@@ -7,7 +7,6 @@ const auth = require('../routes/auth.js');
 const groups = require('../routes/groups.js');
 const tests = require('../routes/tests.js');
 
-
 const app = express();
 if (!config.get('jwtPrivateKey')) {
   console.error('FATAL ERROR: JWT not defined');
