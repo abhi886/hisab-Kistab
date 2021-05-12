@@ -85,46 +85,54 @@ router.post('/addMembers', async (req, res) => {
     console.log(error.message);
   }
 });
-
-// Delete members from a group
-
+// Synchronous Method to delete members in a group
 // router.post('/deleteMembers', async (req, res) => {
 //   const group = await Group.findById(req.body.groupId);
 //   if (!group) return res.status(404).send('Group not found');
-//   const rUser = _.remove(group.user, function(e) {
-//     return e == req.body.memberId;
+//   const { memberId } = req.body;
+//   const users = group.user;
+//   if (memberId.length === 0) res.send('No members Selected');
+//   const notMemberArray = [];
+//   memberId.forEach((user) => {
+//     if (group.user.includes(user)) {
+//       users.remove(user);
+//     } else {
+//       notMemberArray.push(user);
+//     }
 //   });
-//   const mUser = group.user;
-//   group.user = [];
-//   group.user = mUser;
-//   const result = await group.save();
-//   res.send(group);
-//   });
-
-// Delete multiple members from a group
-// Test Cases
-// 1. Delete a single user.
-// 2. Delete multiple users.
-
+//   if (notMemberArray.length === 0) {
+//     const result = await group.save();
+//     res.send(users);
+//   } else {
+//     res.send(notMemberArray);
+//   }
+// });
+// Asynchronous Method to delete members in a group
 router.post('/deleteMembers', async (req, res) => {
   const group = await Group.findById(req.body.groupId);
   if (!group) return res.status(404).send('Group not found');
   const { memberId } = req.body;
   const users = group.user;
+  const notMember = [];
   if (memberId.length === 0) res.send('No members Selected');
-  const notMemberArray = [];
-  memberId.forEach((user) => {
-    if (group.user.includes(user)) {
-      users.remove(user);
-    } else {
-      notMemberArray.push(user);
+
+  try {
+    for (let i = 0; i < memberId.length; i += 1) {
+      const eachMember = memberId[i];
+      if (users.includes(eachMember)) {
+        users.remove(eachMember);
+      } else {
+        notMember.push(eachMember);
+      }
     }
-  });
-  if (notMemberArray.length === 0) {
-    const result = await group.save();
-    res.send(users);
-  } else {
-    res.send(notMemberArray);
+    if (notMember.length === 0) {
+      const result = await group.save();
+      res.send(result);
+    } else {
+      res.send(notMember);
+    }
+  } catch (error) {
+    console.log(error.message);
   }
 });
 
