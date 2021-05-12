@@ -26,11 +26,14 @@ const userSchema = new mongoose.Schema({
   },
   isAdmin: Boolean,
 });
-userSchema.methods.generateAuthToken = function(){
-  const token = jwt.sign({_id: this._id, isAdmin:this.isAdmin },config.get('jwtPrivateKey'));
+userSchema.methods.generateAuthToken = function () {
+  const token = jwt.sign(
+    // eslint-disable-next-line no-underscore-dangle
+    { _id: this._id, isAdmin: this.isAdmin },
+    config.get('jwtPrivateKey')
+  );
   return token;
-
-}
+};
 const User = mongoose.model('User', userSchema);
 
 function validateUser(user) {
