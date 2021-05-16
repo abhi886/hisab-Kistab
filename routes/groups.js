@@ -7,7 +7,8 @@ const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const express = require('express');
-const { isArray } = require('lodash');
+const { isArray, reject } = require('lodash');
+const e = require('express');
 const { Group, validate } = require('../models/group');
 const { Genre } = require('../models/genre');
 const { User } = require('../models/user');
@@ -39,45 +40,80 @@ router.post('/createGroup', auth, async (req, res) => {
 router.post('/addMembers', async (req, res) => {
   const { memberId } = req.body;
   const userExist = [];
+  if (req.body.groupId === '')
+    return res.status(404).send('Group cannot be empty');
   const group = await Group.findById(req.body.groupId);
-  const totalLength = memberId.concat(group.user);
+  const users = group.user;
   if (!group) return res.status(404).send('Group not found');
   if (memberId.length === 0)
     return res.send('Select atleast one group members');
-  memberId.forEach(function (user) {
-    if (group.user.includes(user)) {
-      userExist.push(user);
-    } else {
-      group.user = group.user.concat(user);
+
+  try {
+    for (let i = 0; i < memberId.length; i += 1) {
+      const eachMember = memberId[i];
+      if (users.includes(eachMember)) {
+        userExist.push(eachMember);
+      }
     }
-  });
-  if (group.user.length === totalLength.length) {
-    const result = await group.save();
-    res.send(result);
-  } else {
-    res.send(userExist);
+    if (userExist.length === 0) {
+      group.user = group.user.concat(memberId);
+      const result = await group.save();
+      res.send(result);
+    } else {
+      res.send(userExist);
+    }
+  } catch (error) {
+    console.log(error.message);
   }
 });
-// Delete Members/Users
+// Synchronous Method to delete members in a group
+// router.post('/deleteMembers', async (req, res) => {
+//   const group = await Group.findById(req.body.groupId);
+//   if (!group) return res.status(404).send('Group not found');
+//   const { memberId } = req.body;
+//   const users = group.user;
+//   if (memberId.length === 0) res.send('No members Selected');
+//   const notMemberArray = [];
+//   memberId.forEach((user) => {
+//     if (group.user.includes(user)) {
+//       users.remove(user);
+//     } else {
+//       notMemberArray.push(user);
+//     }
+//   });
+//   if (notMemberArray.length === 0) {
+//     const result = await group.save();
+//     res.send(users);
+//   } else {
+//     res.send(notMemberArray);
+//   }
+// });
+// Asynchronous Method to delete members in a group
 router.post('/deleteMembers', async (req, res) => {
   const group = await Group.findById(req.body.groupId);
   if (!group) return res.status(404).send('Group not found');
   const { memberId } = req.body;
   const users = group.user;
+  const notMember = [];
   if (memberId.length === 0) res.send('No members Selected');
-  const notMemberArray = [];
-  memberId.forEach((user) => {
-    if (group.user.includes(user)) {
-      users.remove(user);
-    } else {
-      notMemberArray.push(user);
+
+  try {
+    for (let i = 0; i < memberId.length; i += 1) {
+      const eachMember = memberId[i];
+      if (users.includes(eachMember)) {
+        users.remove(eachMember);
+      } else {
+        notMember.push(eachMember);
+      }
     }
-  });
-  if (notMemberArray.length === 0) {
-    const result = await group.save();
-    res.send(users);
-  } else {
-    res.send(notMemberArray);
+    if (notMember.length === 0) {
+      const result = await group.save();
+      res.send(result);
+    } else {
+      res.send(notMember);
+    }
+  } catch (error) {
+    console.log(error.message);
   }
 });
 

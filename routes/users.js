@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const mongoose = require('mongoose');
+const multer = require('multer');
+
+const upload = multer({ dest: 'uploads/' });
 const express = require('express');
 const auth = require('../middleware/auth');
 const { User, validate } = require('../models/user');
