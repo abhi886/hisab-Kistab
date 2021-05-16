@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 const config = require('config');
@@ -9,54 +10,33 @@ const express = require('express');
 const { isArray, reject } = require('lodash');
 const e = require('express');
 const { Group, validate } = require('../models/group');
+const { Genre } = require('../models/genre');
 const { User } = require('../models/user');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
-router.post('/', async (req, res) => {
+router.get('/', async (req, res) => {
+  const groups = await Group.find().sort('dateCreated');
+  res.send(groups);
+});
+
+router.post('/createGroup', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
+  const genres = await Genre.findById(req.body.genreId);
+  if (!genres) return res.status(400).send('Invalid Genre');
   const group = new Group(_.pick(req.body, ['name', 'description', 'user']));
-  await group.save();
-  res.send(req.body);
+  group.user.push(req.user._id);
+  group.adminUser = req.user._id;
+  group.genre = {
+    _id: genres._id,
+    name: genres.name,
+  };
+  const result = await group.save();
+  res.send(result);
 });
-// get all the groups along with their members
-router.get('/listMembers', async (req, res) => {
-  const member = await Group.find().populate('user');
-  res.send(member);
-});
 
-// Add multiple members/users to a group
-// Test Cases : 1. Add a single member
-// Test Cases 2 : Add multiple members
-// Test Case 3 : Return message if member exist
-
-// router.post('/addMembers', async (req, res) => {
-//   const { memberId } = req.body;
-//   const userExist = [];
-//   const group = await Group.findById(req.body.groupId);
-//   const totalLength = memberId.concat(group.user);
-//   if (!group) return res.status(404).send('Group not found');
-//   if (memberId.length === 0)
-//     return res.send('Select atleast one group members');
-
-//   memberId.forEach((user) => {
-//     if (group.user.includes(user)) {
-//       userExist.push(user);
-//     } else {
-//       group.user = group.user.concat(user);
-//     }
-//   });
-
-//   if (group.user.length === totalLength.length) {
-//     const result = await group.save();
-//     res.send(result);
-//   } else {
-//     res.send(userExist);
-//   }
-// });
-
-// Async approach with try catch
+// Add Members/Users
 router.post('/addMembers', async (req, res) => {
   const { memberId } = req.body;
   const userExist = [];
@@ -67,6 +47,7 @@ router.post('/addMembers', async (req, res) => {
   if (!group) return res.status(404).send('Group not found');
   if (memberId.length === 0)
     return res.send('Select atleast one group members');
+
   try {
     for (let i = 0; i < memberId.length; i += 1) {
       const eachMember = memberId[i];
@@ -143,4 +124,9 @@ router.post('/deleteGroup', async (req, res) => {
   res.send(result);
 });
 
+// get all the groups along with their members
+router.get('/listMembers', async (req, res) => {
+  const member = await Group.find().populate('user');
+  res.send(member);
+});
 module.exports = router;
