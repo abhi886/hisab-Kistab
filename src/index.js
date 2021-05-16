@@ -6,6 +6,7 @@ const users = require('../routes/users');
 const auth = require('../routes/auth.js');
 const groups = require('../routes/groups.js');
 const tests = require('../routes/tests.js');
+const genres = require('../routes/genres');
 
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/groups', groups);
 app.use('/api/tests', tests);
+app.use('/api/genres', genres);
 
 app.get('/', (req, res) => {
   res.send('hello world');
