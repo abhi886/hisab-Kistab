@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const Joi = require('joi');
 const mongoose = require('mongoose');
+const { string } = require('joi');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -23,6 +24,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
     maxlength: 1024,
+  },
+  avatar: {
+    type: string,
   },
   isAdmin: Boolean,
 });
