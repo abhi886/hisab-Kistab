@@ -1,35 +1,25 @@
-const readline = require('readline');
 const express = require('express');
-const { User } = require('../models/user');
-const { url } = require('inspector');
+const fileUpload = require('express-fileupload');
+const path = require('path');
 
 const router = express.Router();
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-router.get('/example1', async () => {
-  console.log(
-    'Testing asynchronous function with readline module and its awesome'
-  );
-  rl.question('How do you like Node ??', (answer) => {
-    console.log(`Your answer: ${answer}`);
-  });
-  console.log('Execute before');
-});
+router.use(fileUpload());
 
-router.get('/example2', async () => {
-  const a = ['a1', 'a2', 'a3'];
-  try {
-    for (let i = 0; i < a.length; i += 1) {
-      const b = a[i];
-      const result = await User.findOne();
-      console.log(`${b}: ${result.name}`);
-    }
-    console.log('Done the loop');
-  } catch (error) {
-    console.log(error.message);
+router.post('/upload', async (req, res) => {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    res.status(400).send('No files were uploaded.');
+    return;
   }
-});
+  console.log('req.files >>>', req.files);
+  const { sampleFile } = req.files;
+  const uploadPath = `${path.dirname(__dirname)}/uploads/${sampleFile.name}`;
+  console.log(uploadPath);
+  sampleFile.mv(uploadPath, (err) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
 
+    res.send(`File uploaded to ${uploadPath}`);
+  });
+});
 module.exports = router;

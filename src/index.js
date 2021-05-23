@@ -1,5 +1,6 @@
 // Changed on jan 5
 const express = require('express');
+const fileupload = require('express-fileupload');
 const mongoose = require('mongoose');
 const config = require('config');
 const users = require('../routes/users');
@@ -9,6 +10,7 @@ const tests = require('../routes/tests.js');
 const genres = require('../routes/genres');
 
 const app = express();
+
 if (!config.get('jwtPrivateKey')) {
   console.error('FATAL ERROR: JWT not defined');
   process.exit(1);
@@ -28,9 +30,13 @@ app.use('/api/auth', auth);
 app.use('/api/groups', groups);
 app.use('/api/tests', tests);
 app.use('/api/genres', genres);
+app.use(fileupload());
 
 app.get('/', (req, res) => {
-  res.send('hello world');
+  res.sendFile(`${__dirname}/index.html`);
+});
+app.post('/upload', async (req, res) => {
+  console.log(req.files);
 });
 
 const port = process.env.PORT || 3000;
